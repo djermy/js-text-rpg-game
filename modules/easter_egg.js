@@ -1,6 +1,6 @@
-import { text, goldText, healthText } from "./constants";
-import { gold, health } from "./player";
-import { lose } from "./monsters";
+import { text, goldText, healthText } from "./constants.js";
+import { playerStats } from "./player.js";
+import { lose } from "./monsters.js";
 
 export function easterEgg() {
   update(locations[7]);

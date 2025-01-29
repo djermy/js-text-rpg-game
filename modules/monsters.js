@@ -1,5 +1,5 @@
 import { locations } from "./locations.js";
-import { currentWeapon, health, xp, gold, inventory } from "./player.js";
+import { playerStats } from "./player.js";
 import {
   monsterStats,
   monsterName,
@@ -9,7 +9,7 @@ import {
   weapons,
   goldText,
   xpText,
-} from "./constants";
+} from "./constants.js";
 
 const monsters = [
   {

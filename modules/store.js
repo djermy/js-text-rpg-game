@@ -1,12 +1,12 @@
-import { gold, health, inventory, currentWeapon } from "./player.js";
-import { goldText, healthText, text, weapons, button2 } from "./constants";
+import { playerStats } from "./player.js";
+import { goldText, healthText, text, weapons, button2 } from "./constants.js";
 
 export function buyHealth() {
-  if (gold >= 10) {
-    gold -= 10;
-    health += 10;
-    goldText.innerText = gold;
-    healthText.innerText = health;
+  if (playerStats.gold.get() >= 10) {
+    playerStats.gold.set(10, "-");
+    playerStats.health.set(10, "+");
+    goldText.innerText = playerStats.gold.get();
+    healthText.innerText = playerStats.health.get();
   } else {
     text.innerText = "You do not have enough gold to buy health.";
   }

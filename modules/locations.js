@@ -67,12 +67,12 @@ export const locations = [
 
 export function update(location) {
   monsterStats.style.display = "none";
-  button1.innerText = location[buttonText][0];
-  button2.innerText = location[buttonText][1];
-  button3.innerText = location[buttonText][2];
-  button1.onclick = location[buttonFunctions][0];
-  button2.onclick = location[buttonFunctions][1];
-  button3.onclick = location[buttonFunctions][2];
+  button1.innerText = location.buttonText[0];
+  button2.innerText = location.buttonText[1];
+  button3.innerText = location.buttonText[2];
+  button1.onclick = location.buttonFunctions[0];
+  button2.onclick = location.buttonFunctions[1];
+  button3.onclick = location.buttonFunctions[2];
   text.innerHTML = location.text;
 }
 
