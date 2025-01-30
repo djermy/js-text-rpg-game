@@ -11,97 +11,98 @@ import {
   xpText,
 } from "./constants.js";
 
-const monsters = [
-  {
+const monsters = {
+  slime: {
+    id: 0,
     name: "slime",
     level: 2,
     health: 15,
   },
-  {
+  fangedBeast: {
+    id: 1,
     name: "fanged beast",
     level: 8,
     health: 60,
   },
-  {
+  dragon: {
+    id: 2,
     name: "dragon",
     level: 20,
     health: 300,
   },
-];
+};
 
-let fighting;
 let monsterHealth;
 
 export function fightSlime() {
-  fighting = 0;
-  goFight();
+  goFight(monsters.slime);
 }
 
 export function fightBeast() {
-  fighting = 1;
-  goFight();
+  goFight(monsters.fangedBeast);
 }
 
 export function fightDragon() {
-  fighting = 2;
-  goFight();
+  goFight(monsters.dragon);
 }
 
-export function goFight() {
+export function goFight(monster) {
   update(locations[3]);
-  monsterHealth = monsters[fighting].health;
+  monsterHealth = monster.health;
   monsterStats.style.display = "block";
-  monsterName.innerText = monsters[fighting].name;
+  monsterName.innerText = monster.name;
   monsterHealthText.innerText = monsterHealth;
 }
 
-export function attack() {
-  text.innerText = "The " + monsters[fighting].name + " attacks.";
-  text.innerText +=
-    " You attack it with your " + weapons[currentWeapon].name + ".";
-  health -= getMonsterAttackValue(monsters[fighting].level);
+export function attack(monster) {
+  text.innerText = `The ${monster.name} attacks.`;
+  text.innerText += `You attack it with your ${playerStats.currentWeapon.get()}.`;
+  health -= getMonsterAttackValue(monster.level);
   if (isMonsterHit()) {
     monsterHealth -=
-      weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1;
+      weapons[playerStats.currentWeapon.get()].power +
+      Math.floor(Math.random() * playerStats.xp.get()) +
+      1;
   } else {
     text.innerText += " You miss.";
   }
-  healthText.innerText = health;
+  healthText.innerText = playerStats.health.get();
   monsterHealthText.innerText = monsterHealth;
-  if (health <= 0) {
+  if (playerStats.health.get() <= 0) {
     lose();
   } else if (monsterHealth <= 0) {
-    if (fighting === 2) {
+    if (monster.name === "dragon") {
       winGame();
     } else {
       defeatMonster();
     }
   }
-  if (Math.random() <= 0.1 && inventory.length !== 1) {
-    text.innerText += " Your " + inventory.pop() + " breaks.";
-    currentWeapon--;
+  if (Math.random() <= 0.1 && playerStats.inventory.get().length !== 1) {
+    text.innerText += ` Your ${playerStats.inventory.set(null, "--")} breaks.`;
+    playerStats.currentWeapon.set("-");
   }
 }
 
-export function dodge() {
-  text.innerText = "You dodge the attack from the " + monsters[fighting].name;
+export function dodge(monster) {
+  text.innerText = `You dodge the attack from the ${monster.name}`;
 }
 
-export function getMonsterAttackValue(level) {
-  const hit = level * 5 - Math.floor(Math.random() * xp);
+export function getMonsterAttackValue(monster) {
+  const hit =
+    monster.level * 5 - Math.floor(Math.random() * playerStats.xp.get());
   console.log(hit);
   return hit > 0 ? hit : 0;
 }
 
 function isMonsterHit() {
-  return Math.random() > 0.2 || health < 20;
+  return Math.random() > 0.2 || playerStats.health.get() < 20;
 }
 
-export function defeatMonster() {
-  gold += Math.floor(monsters[fighting].level * 6.7);
-  xp += monsters[fighting].level;
-  goldText.innerText = gold;
-  xpText.innerText = xp;
+export function defeatMonster(monster) {
+  playerStats.gold.set(Math.floor(monster.level * 6.7), "+");
+  playerStats.xp.set(monster.level, "+");
+  goldText.innerText = playerStats.gold.get();
+  xpText.innerText = playerStats.xp.get();
   update(locations[4]);
 }
 
@@ -114,13 +115,9 @@ export function winGame() {
 }
 
 export function restart() {
-  xp = 0;
-  health = 100;
-  gold = 50;
-  currentWeapon = 0;
-  inventory = ["stick"];
-  goldText.innerText = gold;
-  healthText.innerText = health;
-  xpText.innerText = xp;
+  playerStats.reset();
+  goldText.innerText = playerStats.gold.get();
+  healthText.innerText = playerStats.health.get();
+  xpText.innerText = playerStats.xp.get();
   goTown();
 }

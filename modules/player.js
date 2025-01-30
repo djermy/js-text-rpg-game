@@ -25,7 +25,16 @@ export const playerStats = {
     get: getInventory,
     set: setInventory,
   },
+  reset: resetStats,
 };
+
+function resetStats() {
+  xp = 0;
+  health = 100;
+  gold = 50;
+  currentWeapon = 0;
+  inventory = ["stick"];
+}
 
 function getXp() {
   return xp;
@@ -39,6 +48,10 @@ function setXp(newXp, operator) {
   } else {
     console.error("invalid operator");
   }
+}
+
+function resetXp() {
+  xp = 0;
 }
 
 function getHealth() {
@@ -73,11 +86,11 @@ function getCurentWeapon() {
   return currentWeapon;
 }
 
-function setCurrentWeapon(newWeapon, operator) {
+function setCurrentWeapon(operator) {
   if (operator === "+") {
-    currentWeapon += newWeapon;
+    currentWeapon++;
   } else if (operator === "-") {
-    currentWeapon -= newWeapon;
+    currentWeapon--;
   } else {
     console.error("invalid operator");
   }
@@ -88,10 +101,12 @@ function getInventory() {
 }
 
 function setInventory(item, operator) {
-  if (operator === "+") {
+  if (operator === "+" && item !== null) {
     inventory.push(item);
   } else if (operator === "-") {
-    inventory.pop();
+    inventory.shift();
+  } else if (operator === "--") {
+    return inventory.pop();
   } else {
     console.error("invalid operator");
   }

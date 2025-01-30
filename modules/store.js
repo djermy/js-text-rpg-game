@@ -13,15 +13,16 @@ export function buyHealth() {
 }
 
 export function buyWeapon() {
-  if (currentWeapon < weapons.length - 1) {
-    if (gold >= 30) {
-      gold -= 30;
-      currentWeapon++;
-      goldText.innerText = gold;
+  if (playerStats.currentWeapon.get() < weapons.length - 1) {
+    if (playerStats.gold.get() >= 30) {
+      playerStats.gold.set(30, "-");
+      playerStats.currentWeapon.set(1, "+");
+      goldText.innerText = playerStats.gold.get();
       let newWeapon = weapons[currentWeapon].name;
       text.innerText = "You now have a " + newWeapon + ".";
-      inventory.push(newWeapon);
-      text.innerText += " In your inventory you have: " + inventory;
+      playerStats.inventory.set(newWeapon, "+");
+      text.innerText +=
+        " In your inventory you have: " + playerStats.inventory.get();
     } else {
       text.innerText = "You do not have enough gold to buy a weapon.";
     }
@@ -33,12 +34,13 @@ export function buyWeapon() {
 }
 
 function sellWeapon() {
-  if (inventory.length > 1) {
-    gold += 15;
-    goldText.innerText = gold;
-    let currentWeapon = inventory.shift();
+  if (playerStats.inventory.get().length > 1) {
+    playerStats.gold.set(15, "+");
+    goldText.innerText = playerStats.gold.get();
+    let currentWeapon = playerStats.inventory.set(null, "-");
     text.innerText = "You sold a " + currentWeapon + ".";
-    text.innerText += " In your inventory you have: " + inventory;
+    text.innerText +=
+      " In your inventory you have: " + playerStats.inventory.get();
   } else {
     text.innerText = "Don't sell your only weapon!";
   }

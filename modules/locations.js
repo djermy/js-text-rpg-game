@@ -8,6 +8,7 @@ import {
   attack,
   dodge,
   restart,
+  monsters,
 } from "./monsters.js";
 
 export const locations = [
